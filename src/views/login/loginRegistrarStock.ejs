@@ -1,0 +1,27 @@
+<%- include('../partials/header.ejs') %> 
+
+<div class="d-flex align-items-center " style="height: 90vh;">
+    <div class="m-auto  col-lg-3 col-sm-6 col-8 ">
+        <div class="border border-light rounded border border-5 bg-dark p-4">
+
+            <h2 class="fw-bolder mb-5 text-light text-center ">Ingreso Administrador</h2>
+            <form action="/loginRegistrarStock/logged" method="post"> 
+                <input class="form-control mb-2 border-info border-3" type="text" name="usuario" placeholder="Ingrese su Usuario">
+                <input class="form-control mb-2 border-info border-3" type="password" name="contrasena" placeholder="Ingrese su Contraseña"/>
+                <button class="btn btn-info m-auto d-block text-body-tertiary" type="submit">Ingresar</button>
+            </form>
+            
+        </div>
+        <div class="position-absolute top-0  end-0 mt-5 me-4"  >
+            <% if(typeof validaciones != 'undefined') { %>
+                <% validaciones.forEach( (validacion) => {  %> 
+                <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+                    <strong><%= validacion.msg %></strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <% }) %>
+            <% } %>
+            
+        </div>
+    </div>
+</div>

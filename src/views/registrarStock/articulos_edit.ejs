@@ -1,0 +1,32 @@
+<%- include('../partials/header.ejs') %> 
+<body>
+   <div class="row justify-content-center "  style="height: 90vh;">
+    <div class="col-lg-3 col-sm-6 col-8 m-auto align-self-center">
+
+        <form action="/registrarStock/update/<%= data[0].articulo_id %>" method="post">
+            <input class="form-control mb-2" type="text" name="articulo" value="<%=data[0].articulo_nombre%>"/>
+            <input class="form-control mb-2" type="text" name="cantidad" value="<%=data[0].articulo_cantidad%>"/>
+            <select class="form-control mb-2" name="categoria" value="<%=data[0].categoria_tipo%>" disabled>
+                <option value="<%=data[0].categoria_tipo%>"><%=data[0].categoria_tipo%></option>
+            </select>
+            <input class="form-control mb-2" type="number" name="precioCompra"  value="<%=data[0].articulo_precioCompra%>"/>
+            <input class="form-control mb-2" type="number" name="precioVenta"  value="<%=data[0].articulo_precioVenta%>"/>
+            <div class="d-flex ">
+
+                <button class="btn btn-danger m-auto d-block " ><a class="text-body-tertiary" href="/registrarStock">Volver</a></button>
+                <button class="btn btn-info m-auto d-block text-body-tertiary" type="submit">Save Product</button>
+            </div>
+        </form>
+        <% if(typeof validaciones != 'undefined') { %>
+            <% validaciones.forEach( (validacion) => {  %> 
+            <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+                <strong><%= validacion.msg %></strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <% }) %>
+        <% } %>
+        
+    </div>
+    
+</div> 
+</body>

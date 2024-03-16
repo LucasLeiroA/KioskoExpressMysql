@@ -1,0 +1,73 @@
+<%- include('../partials/header.ejs') %> 
+
+
+<body>
+    <div class="table-responsive mt-5 col-12 col-lg-5 col-sm-12 m-auto "  style="height: 80vh; overflow: auto"> 
+            <table class="table table-dark mt-5 ">
+
+            <thead class="mt-5">
+                    <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Dni</th>
+                            <th>Seleccionar</th>
+                    </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <% if(clientes){ %> <% for(var i=0 ; i < clientes.length ; i++){%>
+                        <tr>
+                            <th><%= clientes[i].cliente_id %></th>
+                            <th ><%= clientes[i].cliente_nombre %></th>
+                            <th >
+                            <%= clientes[i].cliente_apellido %>
+                            </th>
+                            <th>
+                                <%= clientes[i].cliente_dni %>
+                            </th>
+                            <th>
+                                <button data-id="<%= clientes[i].cliente_id %>" data-nombre="<%= clientes[i].cliente_nombre %>"  data-apellido="<%= clientes[i].cliente_apellido %>"  data-dni=" <%= clientes[i].cliente_dni %>" class="boton-select btn btn-info">Select</button>
+                            </th>
+                        </tr>
+                        <%}}%>
+            </tbody>
+    </table>
+    <div class="w-100">
+
+        <a href="/ventas" class="btn btn-danger m-auto w-100">Volver</a>
+    </div>
+</div>
+
+   
+</body>
+<script>
+
+    const btnSelecClient = document.querySelectorAll(".boton-select");
+
+    btnSelecClient.forEach((boton) =>{
+        boton.addEventListener("click" , (e)=>{
+            const id = e.target.dataset.id;
+            const nombre = e.target.dataset.nombre;
+            const apellido = e.target.dataset.apellido;
+            const dni = e.target.dataset.dni;
+             
+            const infoClient = {
+                id:id,
+                nombre:nombre+" "+apellido,
+                dni:dni
+            }
+
+
+               if(localStorage.cliente){
+                localStorage.setItem("cliente", JSON.stringify(infoClient));
+               }else{
+                localStorage.setItem("cliente", JSON.stringify(infoClient));
+               }
+
+               window.location.replace("/ventas");
+        })
+    })
+
+
+
+</script>

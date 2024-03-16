@@ -1,0 +1,336 @@
+<%- include('../partials/header.ejs') %>
+
+  
+  <div class="container-fluid pt-5 text-center">
+ 
+
+  <div class="row">
+    <div class="col-12 col-lg-5 col-sm-12">
+      <div class="col-12 col-lg-12 col-sm-8 m-auto mt-5 mb-2">
+        <form action="/ventas/filter" method="POST" class="d-flex">
+          <input
+            name="busqueda"
+            class="form-control me-2"
+            type="search"
+            placeholder="Ingrese el Articulo"
+          />
+          <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form>
+      </div>
+        <div class="table-responsive "  style="height: 80vh; overflow: auto"> 
+      <table class="table table-dark">
+        <thead>
+          <tr>
+            <th>Numero</th>
+            <th>Articulo</th>
+            <th>Precio de Venta</th>
+            <th>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-cart-plus"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9z"
+                />
+                <path
+                  d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zm3.915 10L3.102 4h10.796l-1.313 7zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"
+                />
+              </svg>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody class="table-group-divider">
+          <% if(data){ %> <% for(var i=0 ; i < data.length ; i++){ %>
+          <tr>
+            <th><%= data[i].articulo_id %></th>
+            <th class="articulo-nombre"><%= data[i].articulo_nombre %></th>
+            <th class="articulo-precioVenta">
+              <%= data[i].articulo_precioVenta %>
+            </th>
+            <th>
+              <button
+                class="boton-selector btn bg-info"
+                data-id="<%= data[i].articulo_id %>"
+                data-name="<%= data[i].articulo_nombre %>"
+                data-price="<%= data[i].articulo_precioVenta %>"
+              >
+                Add
+              </button>
+            </th>
+          </tr>
+          <%}}%>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  
+    <div class="col-lg-7 align-self-start mt-5">
+      <div class="d-flex justify-content-around mb-3">
+        <input type="text" class="text-center bg-light" value="<%= fecha %>" disabled>
+        <input type="text" placeholder="numero datira" disabled>
+      </div>
+      <div class="card-body" style="height: 40vh; overflow: auto">
+        <table class="table table-info">
+          <thead >
+            <tr  style="position: sticky; top: 0;">
+              <th>Articulo</th>
+              <th>Cantidad</th>
+              <th>Precio de Venta</th>
+              <th>Total</th>
+              <th>Eliminar</th>
+            </tr>
+          </thead>
+
+          <tbody id="cart-table" class="table-group-divider">
+            <tr class="table-danger" style="position: sticky; bottom: 0;">
+              <th></th>
+              <th></th>
+              <th>TOTAL</th>
+              <th>0</th>
+              <th></th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="d-flex justify-content-around mt-5 mb-3 m-auto">
+        <div >
+          <% if(errormessage){ %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>Debe Ingresar un cliente!</strong> 
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          <%}%>        
+              <select name="selecTipo" class="form-select bg-dark col-12 col-lg-5 col-sm-8 text-light mt-2 mb-5" id="tipo-pago" onchange="payOnchange()">
+             
+                <option   value="1">Efectivo</option>
+                    <option selected  value="2">Cuenta Corriente</option>
+                    <option  value="3">Transferencia</option>
+                </select>
+                <div id="client-search">
+                  <form class="d-flex mb-3" role="search" action="/ventas/clientes" method="POST">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="cliente">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                  </form>
+          
+                  <input id="inputCliente" class="form-control me-2" placeholder="Cliente" disabled>
+                  <input id="inputDni" class="form-control me-2 mt-3" placeholder="dni" disabled>
+                </div>
+             
+        </div>
+      <div id="btn-agregarVenta" class="mt-2">
+       
+      
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+
+  
+
+  getClient();
+ 
+  function limpiarCliente(){
+    localStorage.removeItem("cliente")
+    localStorage.removeItem("carrito");
+  }
+
+  if (localStorage.carrito) {
+    var cart  = JSON.parse(localStorage.carrito);
+
+ }
+ var tipoVenta = document.getElementById('tipo-pago').value;
+
+ function payOnchange(){
+    
+  localStorage.removeItem("cliente")
+  tipoVenta = document.getElementById('tipo-pago').value;
+   
+   if(tipoVenta != "2"){
+     document.getElementById('client-search').innerHTML="";
+
+   }else{
+     document.getElementById('client-search').innerHTML=`
+     
+
+     <form class="d-flex mb-3" role="search" action="/ventas/clientes" method="POST">
+                   <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="cliente">
+                   <button class="btn btn-outline-success" type="submit">Search</button>
+                 </form>
+         
+                 <input id="inputCliente" class="form-control me-2" placeholder="Cliente" disabled>
+                 <input id="inputDni" class="form-control me-2 mt-3" placeholder="dni" disabled>
+
+
+     `;
+   }
+ 
+   getClient()
+   ShowHtml()
+   limpiarCliente()
+ }   
+
+  
+
+
+
+  function btnDelete (prodId){
+  
+      let productObj = JSON.parse(localStorage.getItem("carrito"));
+      let index = productObj.findIndex((prod) => prod.id == prodId);
+      productObj.splice(index,1)
+      let productJSON = JSON.stringify(productObj)
+      localStorage.setItem("carrito",productJSON)
+      location.reload();
+    } 
+
+  function vaciarCart() {
+    localStorage.removeItem("carrito");
+    location.reload();
+  }
+
+  const btnSelect = document.querySelectorAll(".boton-selector");
+
+  btnSelect.forEach((boton) => {
+    boton.addEventListener("click", (e) => {
+      const id = e.target.dataset.id;
+      const nombre = e.target.dataset.name;
+      const price = e.target.dataset.price;
+
+      const infoProduct = {
+        id: id,
+        quantity: 1,
+        nombre: nombre,
+        price: price,
+      };
+
+      if (localStorage.carrito) {
+        cart = JSON.parse(localStorage.carrito);
+
+        let index = cart.findIndex((prod) => prod.id == id);
+
+        if (index != -1) {
+          cart[index].quantity++;
+        } else {
+          cart.push(infoProduct);
+        }
+
+        localStorage.setItem("carrito", JSON.stringify(cart));
+      } else {
+        localStorage.setItem("carrito", JSON.stringify([infoProduct]));
+        cart = JSON.parse(localStorage.carrito);
+      }
+
+      ShowHtml();
+    
+    });
+  });
+
+  function ShowHtml() {
+
+
+   
+    var total = 0;
+    var totalAll = 0;
+    document.getElementById("cart-table").innerHTML = "";
+    cart.forEach((p) => {
+      document.getElementById("cart-table").innerHTML += `          <tr>
+                          <th>${p.nombre}</th>    
+                          <th>${p.quantity}</th>
+                          <th>${p.price}</th>
+                          <th>${p.quantity * p.price}</th>
+                          <th> <button class="btn btn-danger" onClick="btnDelete(${
+                            p.id
+                          })" > 
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                </svg>
+                            </button> 
+                            
+                        </th>
+                  </tr>`;
+
+      total = total + p.quantity * p.price;
+      totalAll = totalAll + p.quantity;
+    });
+
+    document.getElementById("cart-table").innerHTML += `   
+           <tr class="table-danger" style="position: sticky; bottom: 0;" >
+              <th></th>
+              <th></th>
+              <th>TOTAL</th>
+              <th>${total}</th> 
+              <th><button class="btn btn-danger" onClick="vaciarCart()" >    </svg><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart4" viewBox="0 0 16 16">
+                                  <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l.5 2H5V5zM6 5v2h2V5zm3 0v2h2V5zm3 0v2h1.36l.5-2zm1.11 3H12v2h.61zM11 8H9v2h2zM8 8H6v2h2zM5 8H3.89l.5 2H5zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"/>
+                                </svg><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                             
+                                </button></th>        
+            </tr>
+      `;
+      
+      var idProduct = []
+      var quantityProduct = []
+      for (let i = 0; i < cart.length; i++) {
+
+        idProduct.push(cart[i].id)
+        quantityProduct.push(cart[i].quantity)
+
+        //seguir desde acacacaca
+      }
+  
+      if(tipoVenta == 2){
+          let cliente = document.getElementById("inputDni").value;
+          document.getElementById('btn-agregarVenta').innerHTML= ` 
+          <a href="/ventas/add/${idProduct}/${quantityProduct}/${total}/${tipoVenta}/${cliente}" class="btn btn-success" onclick="limpiarCliente()">Aceptar</a>
+          `
+      }else{
+        document.getElementById('btn-agregarVenta').innerHTML= ` 
+          <a href="/ventas/add/${idProduct}/${quantityProduct}/${total}/${tipoVenta}" class="btn btn-success" onclick="limpiarCliente()">Aceptar</a>
+          `
+      }
+     
+    
+  }
+
+  if (cart != undefined) {
+    ShowHtml();
+   
+  }
+
+
+
+  function getClient(){
+      if(localStorage.cliente){
+        var cliente = JSON.parse(localStorage.cliente);
+        let inputClient = document.getElementById("inputCliente");
+        let inputDni = document.getElementById("inputDni");
+        if (inputClient && inputDni) {
+            inputClient.value = cliente.nombre
+            inputDni.value = cliente.dni
+        }
+    
+      }
+      
+  }
+
+
+
+ 
+
+
+
+
+
+</script>
