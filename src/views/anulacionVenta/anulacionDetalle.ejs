@@ -1,0 +1,60 @@
+<%- include('../partials/header.ejs') %>
+
+
+<div class="container mt-5 d-flex align-items-center justify-content-center" style="height: 80vh;">
+    <div class="rounded bg-white col-lg-8 col-sm-10 col-10">
+        <h1 class="text-center">Detalle de Venta</h1>
+         <div class=" table-responsive col-lg-8 col-sm-10 col-10 m-auto pt-3">
+        <% if(venta){ %>
+
+            <% if(clientName) { %>
+                <h6>Cliente: <%= clientName %></h6>
+           <% } %>
+            <h6>nro factura :    ---   <%= venta[0].venta_nro %>
+               ---</h6>
+            <h6>Fecha:  <%= venta_fecha %></h6>
+      
+            <table class="table table-white">
+                <thead class="table-warning">
+                    <tr>
+                        <th>nombre</th>
+                        <th>cantidad</th>
+                        <th>precio</th>
+                        <th>subtotal</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider"">
+                        <% for(var i=0 ; i < venta.length ; i++){ %>
+                         
+                              <tr>
+                                    <th><%= venta[i].articulo %></th>
+                                    <th><%= venta[i].cantidad %></th>
+                                    <th><%= venta[i].precioVenta %></th>
+                                    <th><%= venta[i].subtotal %></th>
+                            </tr> 
+                          <% } %>     
+                </tbody>
+                <tfoot class="table-info">
+                    <th>
+                        <th>
+                          
+                        </th>
+                        <th>
+                            TOTAL
+                        </th>
+                        <th>
+                            $<%= montoTotal %>
+                        </th>
+                    </th>
+                </tfoot>
+            </table>
+
+            <%}%>
+    </div>
+    <div class="text-center w-100 mb-3">
+        <a class="btn btn-danger col-lg-4 col-sm-5 col-4"  href="/anulacionVentas/fecha/<%=fecha%>">Volver</a>
+        <a href="/anulacionVentas/anulada/<%=fecha%>/<%=id%>"  class="btn btn-warning col-lg-4 col-sm-5 col-4" >Anular</a>
+    </div>
+    </div>
+   
+</div>

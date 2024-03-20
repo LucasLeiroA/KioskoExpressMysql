@@ -40,7 +40,7 @@ export const saveProduct = async (req,res) => {
       
     } catch (error) {
         res.status(500);
-        res.send(error.message + 'gola como');
+        res.send(error.message);
     }
     
     res.redirect('/registrarStock')
@@ -66,21 +66,23 @@ export const updateProduct = async(req,res) =>{
 }
 
 export const editProduct = async(req,res)=>{
- 
-    const dataUnique = await pool.query('select * from categoria inner join articulo on categoria.categoria_id = articulo.categoria_id');
-    
 
+
+    let idArticulo = req.params.id;
+    const dataUnique = (await pool.query(`select * from categoria inner join articulo on categoria.categoria_id = articulo.categoria_id where articulo.articulo_id=${idArticulo}`))[0];
+    
+    console.log(dataUnique);
     const error = validationResult(req);
     if (!error.isEmpty()) {
         const valores = req.body;
         const validaciones = error.array()
-        return res.render('registrarStock/articulos_edit.ejs' , {data:dataUnique.recordset,validaciones:validaciones,valores:valores})
+        return res.render('registrarStock/articulos_edit.ejs' , {data:dataUnique,validaciones:validaciones,valores:valores})
        
     }
 
     
 
-    let idArticulo = req.params.id;
+    
     let articulo = req.body.articulo;
     let cantidad = req.body.cantidad;
     let precioCompra = req.body.precioCompra;

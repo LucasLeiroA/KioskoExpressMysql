@@ -17,6 +17,7 @@
     <option value="ventasPorMesContado">Ventas Por Mes Contado</option>
     <option value="ventasPorMesContadoTransfencia">Ventas Por Mes Transferencia</option>
     <option value="ventasPormesCuentaCorriente">Ventas Por Mes Cuenta Corriente</option>
+    <option value="ventasAnuladas">Ventas Anuladas Por mes</option>
   </select>
 
   <div id="container-date">
@@ -26,11 +27,12 @@
 </div>
 
 <script>
+
   function inputDateOnchage() {
     const fecha = document.getElementById("reporte-date").value;
     var reporte = document.getElementById("select-reporte").value;
-    console.log(reporte);
-    if (reporte === "ventasPorFecha" || reporte === "ventasPorMes" || reporte === "ventasPorFechaContado" || reporte === "VentasPorFechaTransferencia" || reporte === "ventasPorMesContado" || reporte === "ventasPorMesContadoTransfencia" || reporte ==="VentasPorFechaCuentaCorriente" || reporte === "ventasPormesCuentaCorriente") {
+
+    if (reporte === "ventasPorFecha" || reporte === "ventasPorMes" || reporte === "ventasPorFechaContado" || reporte === "VentasPorFechaTransferencia" || reporte === "ventasPorMesContado" || reporte === "ventasPorMesContadoTransfencia" || reporte ==="VentasPorFechaCuentaCorriente" || reporte === "ventasPormesCuentaCorriente" || reporte === "ventasAnuladas") {
        return   document.getElementById("btn-filter").innerHTML = `
              <a href="/reportesMultiples/${reporte}/${fecha}" class="btn btn-info mt-2 text-light">Filtrar</a>
              `;
@@ -42,7 +44,7 @@
   function ReporteOnchange() {
     var reporte = document.getElementById("select-reporte").value;
 
-    if(reporte === "ventasPorMes" || reporte ===  "ventasPorMesContado" ||reporte ===  "ventasPorMesContadoTransfencia" || reporte === "ventasPormesCuentaCorriente"){
+    if(reporte === "ventasPorMes" || reporte ===  "ventasPorMesContado" ||reporte ===  "ventasPorMesContadoTransfencia" || reporte === "ventasPormesCuentaCorriente" || reporte === "ventasAnuladas"){
 
         return document.getElementById("container-date").innerHTML = `
             

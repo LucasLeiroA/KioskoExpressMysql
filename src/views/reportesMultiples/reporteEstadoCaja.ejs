@@ -1,0 +1,32 @@
+<%- include('../partials/header.ejs') %>
+
+
+
+
+<div class="container pt-5 text-center mt-5">
+    <h1 class="text-light">Estado de Caja</h1>
+    <div class="table-responsive col-lg-9 col-sm-12 col-12 m-auto">
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th>Contado</th>
+                    <th>Cuenta Corriente</th>
+                    <th>Transferencia</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+
+                        <tr>                      
+                            <th><%=estados[0].estadoCaja_total %></th>
+                            <th><%=estados[1].estadoCaja_total %></th>
+                            <th><%=estados[2].estadoCaja_total %></th>
+                        </tr>
+           
+           
+            </tbody>
+          </table>   
+    </div>
+    <div>
+            <a href="/reportesMultiples" class="btn btn-danger mb-3">Volver</a>
+    </div>
+</div>

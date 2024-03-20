@@ -76,6 +76,20 @@ export const addVenta = async (req ,res ) => {
         
     }
 
+    // Modificacion del estado de caja
+
+    // Traemos el valor actual del estado para luego modificarlo.
+
+    let montoEstadoCaja = (await pool.query(`select estadoCaja_total from estadocaja where estadoCaja_id =${parseInt(tipoVenta)}`))[0];
+    montoEstadoCaja = montoEstadoCaja[0].estadoCaja_total + parseInt(montoTotal);
+
+
+    // Moficamos el nuevo valor de estado de caja
+    await pool.query(`update estadocaja SET estadoCaja_total = ${montoEstadoCaja}  WHERE estadoCaja_id = ${parseInt(tipoVenta)}`);
+
+
+
+    
   let lastVenta = (await pool.query(`SELECT venta_id FROM venta ORDER BY venta_id DESC LIMIT 1`))[0];
 
     if (lastVenta == "") {

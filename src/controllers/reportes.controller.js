@@ -8,6 +8,15 @@ export const getReporte = (req,res) => {
 
 }
 
+
+export const getEstadoCaja = async (req,res) =>{
+
+   let estados = (await pool.query(`select estadoCaja_total from estadocaja`))[0]
+
+
+   res.render('reportesMultiples/reporteEstadoCaja.ejs' ,{estados})
+}
+
 export const getSingleVenta = async (req , res) => {
 
    const id_venta = req.params.id;
@@ -63,7 +72,7 @@ export const getVentaDate = async (req, res) => {
    const fecha = req.params.fecha;
    const result = await pool.query(`select venta_id,venta_nro, EXTRACT(DAY FROM venta_fecha) AS 'venta_dia', EXTRACT(MONTH FROM venta_fecha) AS 'venta_mes',
    EXTRACT(YEAR FROM venta_fecha) AS 'venta_anio' , estadoVenta_id,tipoVenta_id,venta_montoTotal  
-  from venta where venta_fecha >= '${fecha}' and venta_fecha <= '${fecha}'`);
+  from venta where venta_fecha >= '${fecha}' and venta_fecha <= '${fecha}' and estadoVenta_id=1`);
    const url= "ventasPorFecha"
 
    const ventas = result[0];
@@ -113,7 +122,7 @@ export const getVentasContadoDate = async(req,res) =>{
    const fecha = req.params.fecha;
    const result = await pool.query(`select venta_id,venta_nro, EXTRACT(DAY FROM venta_fecha) AS 'venta_dia', EXTRACT(MONTH FROM venta_fecha) AS 'venta_mes',
    EXTRACT(YEAR FROM venta_fecha) AS 'venta_anio' , estadoVenta_id,tipoVenta_id,venta_montoTotal  
-  from venta where venta_fecha >= '${fecha}' and venta_fecha <= '${fecha}' and tipoVenta_id = 1`);
+  from venta where venta_fecha >= '${fecha}' and venta_fecha <= '${fecha}' and tipoVenta_id = 1 and estadoVenta_id=1`);
    const url ="VentasPorFechaContado"
    const ventas = result[0];
    let totalVentas = 0;
@@ -159,7 +168,7 @@ export const getVentasTransferenciaDate = async(req,res) =>{
    const fecha = req.params.fecha;
    const result = await pool.query(`select venta_id,venta_nro, EXTRACT(DAY FROM venta_fecha) AS 'venta_dia', EXTRACT(MONTH FROM venta_fecha) AS 'venta_mes',
    EXTRACT(YEAR FROM venta_fecha) AS 'venta_anio' , estadoVenta_id,tipoVenta_id,venta_montoTotal  
-  from venta where venta_fecha >= '${fecha}' and venta_fecha <= '${fecha}' and tipoVenta_id = 3`);
+  from venta where venta_fecha >= '${fecha}' and venta_fecha <= '${fecha}' and tipoVenta_id = 3 and estadoVenta_id=1`);
    const url ="VentasPorFechaTransferencia"
    const ventas = result[0];
    let totalVentas = 0;
@@ -205,7 +214,7 @@ export const getVentaCC = async(req,res) =>{
    const fecha = req.params.fecha;
    const result = await pool.query(`select venta_id,venta_nro, EXTRACT(DAY FROM venta_fecha) AS 'venta_dia', EXTRACT(MONTH FROM venta_fecha) AS 'venta_mes',
    EXTRACT(YEAR FROM venta_fecha) AS 'venta_anio' , estadoVenta_id,tipoVenta_id,venta_montoTotal  
-  from venta where venta_fecha >= '${fecha}' and venta_fecha <= '${fecha}' and tipoVenta_id = 2`);
+  from venta where venta_fecha >= '${fecha}' and venta_fecha <= '${fecha}' and tipoVenta_id = 2 and estadoVenta_id=1`);
    const url ="VentasPorFechaCuentaCorriente"
    const ventas = result[0];
    let totalVentas = 0;
@@ -255,7 +264,7 @@ export const getVentasMes = async(req,res) =>{
 
    const result = await pool.query(`select venta_id,venta_nro, EXTRACT(DAY FROM venta_fecha) AS 'venta_dia', EXTRACT(MONTH FROM venta_fecha) AS 'venta_mes',
    EXTRACT(YEAR FROM venta_fecha) AS 'venta_anio' , estadoVenta_id,tipoVenta_id,venta_montoTotal  
-  from venta where venta_fecha >= '${fecha}-01' and venta_fecha <= '${fecha}-${lastDayMonth}'`);
+  from venta where venta_fecha >= '${fecha}-01' and venta_fecha <= '${fecha}-${lastDayMonth}' and estadoVenta_id=1`);
 
    const ventas = result[0];
    const url= "ventasPorMes"
@@ -313,7 +322,7 @@ export const getVentasMesContado = async(req,res) => {
 
    const result = await pool.query(`select venta_id,venta_nro, EXTRACT(DAY FROM venta_fecha) AS 'venta_dia', EXTRACT(MONTH FROM venta_fecha) AS 'venta_mes',
    EXTRACT(YEAR FROM venta_fecha) AS 'venta_anio' , estadoVenta_id,tipoVenta_id,venta_montoTotal  
-  from venta where venta_fecha >= '${fecha}-01' and venta_fecha <= '${fecha}-${lastDayMonth}' and tipoVenta_id = 1`);
+  from venta where venta_fecha >= '${fecha}-01' and venta_fecha <= '${fecha}-${lastDayMonth}' and tipoVenta_id = 1 and estadoVenta_id=1`);
 
 
    const ventas = result[0];
@@ -374,7 +383,7 @@ export const getVentasMesTransferencia = async(req,res) => {
 
    const result = await pool.query(`select venta_id,venta_nro, EXTRACT(DAY FROM venta_fecha) AS 'venta_dia', EXTRACT(MONTH FROM venta_fecha) AS 'venta_mes',
    EXTRACT(YEAR FROM venta_fecha) AS 'venta_anio' , estadoVenta_id,tipoVenta_id,venta_montoTotal  
-  from venta where venta_fecha >= '${fecha}-01' and venta_fecha <= '${fecha}-${lastDayMonth}' and tipoVenta_id = 3`);
+  from venta where venta_fecha >= '${fecha}-01' and venta_fecha <= '${fecha}-${lastDayMonth}' and tipoVenta_id = 3 and estadoVenta_id=1`);
 
    const ventas = result[0];
    const url= "ventasPorMesContadoTransfencia"
@@ -436,7 +445,7 @@ export const getventasmesCC = async(req,res) =>{
 
    const result = await pool.query(`select venta_id,venta_nro, EXTRACT(DAY FROM venta_fecha) AS 'venta_dia', EXTRACT(MONTH FROM venta_fecha) AS 'venta_mes',
    EXTRACT(YEAR FROM venta_fecha) AS 'venta_anio' , estadoVenta_id,tipoVenta_id,venta_montoTotal  
-  from venta where venta_fecha >= '${fecha}-01' and venta_fecha <= '${fecha}-${lastDayMonth}' and tipoVenta_id = 2`);
+  from venta where venta_fecha >= '${fecha}-01' and venta_fecha <= '${fecha}-${lastDayMonth}' and tipoVenta_id = 2 and estadoVenta_id=1`);
 
    const ventas = result[0];
    const url= "ventasPormesCuentaCorriente"
@@ -480,4 +489,64 @@ export const getventasmesCC = async(req,res) =>{
 
   
    res.render('reportesMultiples/reporteVentasTotales.ejs' , {ventas:ventas,totalVentas:totalVentas,titulo,fecha,url})
+}
+
+
+export const getventasAnuladasMes = async (req,res) =>{
+
+   // Traemos todas las ventas anuladas
+
+  const titulo = "Ventas Anuladas del   "
+   const fecha = req.params.mes;
+   const mes = fecha.split("-");
+   
+   let lastDayMonth = new Date(parseInt(mes[0]),parseInt(mes[1]), 0).getDate(); 
+
+   const result = await pool.query(`select venta_id,venta_nro, EXTRACT(DAY FROM venta_fecha) AS 'venta_dia', EXTRACT(MONTH FROM venta_fecha) AS 'venta_mes',
+   EXTRACT(YEAR FROM venta_fecha) AS 'venta_anio' , estadoVenta_id,tipoVenta_id,venta_montoTotal  
+  from venta where venta_fecha >= '${fecha}-01' and venta_fecha <= '${fecha}-${lastDayMonth}' and estadoVenta_id=2`);
+
+   const ventas = result[0];
+   const url= "ventasAnuladas"
+
+   let venta_fecha;
+   let totalVentas = 0;
+   ventas.map((e) => {
+  
+      totalVentas = totalVentas + e.venta_montoTotal;
+     switch (e.tipoVenta_id) {
+        case 1:
+           e.tipoVenta_id = e.tipoVenta_id.toString() 
+           e.tipoVenta_id = "Contado"
+           break;
+        case 2:
+        e.tipoVenta_id = e.tipoVenta_id.toString() 
+        e.tipoVenta_id = "Cuenta Corriente"
+        break;
+        case 3:
+        e.tipoVenta_id = e.tipoVenta_id.toString() 
+        e.tipoVenta_id = "Transferencia/Tarjeta"
+        break;  
+     }
+     switch (e.estadoVenta_id) {
+        case 1:
+           e.estadoVenta_id = e.estadoVenta_id.toString() 
+           e.estadoVenta_id = "Habilitada"
+           break;
+        case 2:
+        e.estadoVenta_id = e.estadoVenta_id.toString() 
+        e.estadoVenta_id = "Anulada"
+        break;
+     }
+     for (const i of ventas) {
+      e.fechaTotal =  `${e.venta_dia}/${e.venta_mes}/${e.venta_anio}`
+       
+     }
+     
+
+   }) 
+
+  
+   res.render('reportesMultiples/reporteVentasTotales.ejs' , {ventas:ventas,totalVentas:totalVentas,titulo,fecha,url,anulada:true})
+
 }

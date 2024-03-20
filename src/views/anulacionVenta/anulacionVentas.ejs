@@ -1,0 +1,27 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="container-fluid pt-5 text-center w-25 mt-5">
+
+    <h2 class="text-light">Seleccione la fecha de la venta</h2>
+
+    <input class="form-control mt-5" type="date" id="reporte-date" onchange="inputDateOnchage()">
+
+  <div id="btn-filter">
+  
+  </div>
+</div>
+
+
+<script>
+
+
+    function inputDateOnchage(){
+        let fecha = document.getElementById("reporte-date").value;
+        return  document.getElementById("btn-filter").innerHTML = `
+             <a href="/anulacionVentas/fecha/${fecha}" class="btn btn-info mt-2 text-light">Filtrar</a>
+            `;
+    }
+
+
+
+</script>

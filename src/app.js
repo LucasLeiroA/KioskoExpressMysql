@@ -5,6 +5,8 @@ import loginRegistrarStock from './routes/loginRegistrarStock.routes.js'
 import ventas from './routes/ventas.routes.js'
 import reportes from './routes/reportes.routes.js'
 import incialRoute from './routes/inicial.routes.js'
+import anulacionVenta from './routes/anulacionVenta.routes.js'
+import registrarCliente from './routes/registrarCliente.routes.js'
 import cors from 'cors';
 
 
@@ -48,4 +50,6 @@ app.use(loginRegistrarStock)
 app.use(ventas)
 app.use(reportes)
 app.use(incialRoute)
+app.use(anulacionVenta)
+app.use(registrarCliente)
 export default app;
