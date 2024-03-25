@@ -79,8 +79,8 @@ export const getSingleVenta = async (req , res) => {
    const result = await pool.query(`SELECT cliente_id,EXTRACT(DAY FROM venta_fecha) AS 'venta_dia', EXTRACT(MONTH FROM venta_fecha) AS 'venta_mes', EXTRACT(YEAR FROM venta_fecha) AS 'venta_anio',venta.cliente_id, venta.venta_id,venta.venta_nro,venta.venta_fecha,venta.venta_montoTotal,detale_venta.articulo_id,detale_venta.cantidad,detale_venta.precioVenta,detale_venta.subtotal
    FROM venta
    INNER JOIN detale_venta ON venta.venta_id = detale_venta.venta_id where venta.venta_id = ${parseInt(id_venta)};`);
- 
-    const items = result[0];
+   const items = result[0];
+
  
  
     var data = [];
@@ -136,16 +136,31 @@ export const getSingleVenta = async (req , res) => {
    let montoResta = venta[0].venta_montoTotal;
    let tipoVenta = venta[0].tipoVenta_id;
 
+   // Resta de la deuda del cliente al anular la venta de cuenta corriente
+   if (tipoVenta === 2) {
+      let clienteId = (await pool.query(`select cliente_id from venta where venta_id = ${id}`))[0];
+      
+      let clienteDeuda = (await pool.query(`select cliente_dueda from cliente where cliente_id = ${clienteId[0].cliente_id}`))[0];
+      let nuevaDeuda = clienteDeuda[0].cliente_dueda - montoResta;
+        
+      await pool.query(`UPDATE cliente SET cliente_dueda = ${nuevaDeuda} where cliente_id = ${clienteId[0].cliente_id}`)
+  } 
+
    // traemos el estado de caja para restar el total de la venta
    let resultEstado = (await pool.query(`select estadoCaja_total from estadocaja where estadoCaja_id= ${tipoVenta}`))[0]
    // restamos el estado de caja con el total de la venta obtenida
 
+
    let estado = resultEstado[0].estadoCaja_total;
+  
+
 
    montoResta = estado - montoResta;
 
 
    await pool.query(`update estadocaja SET estadoCaja_total = ${montoResta}  WHERE estadoCaja_id = ${tipoVenta}`);
+
+  
    
    res.redirect(`/anulacionVentas`)
  }

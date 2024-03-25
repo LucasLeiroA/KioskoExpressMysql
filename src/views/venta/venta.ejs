@@ -23,6 +23,7 @@
           <tr>
             <th>Numero</th>
             <th>Articulo</th>
+            <th>Stock</th>
             <th>Precio de Venta</th>
             <th>
               <svg
@@ -49,6 +50,7 @@
           <tr>
             <th><%= data[i].articulo_id %></th>
             <th class="articulo-nombre"><%= data[i].articulo_nombre %></th>
+            <th class="articulo-cantidad"><%= data[i].articulo_cantidad %></th>
             <th class="articulo-precioVenta">
               <%= data[i].articulo_precioVenta %>
             </th>
@@ -72,7 +74,7 @@
     <div class="col-lg-7 align-self-start mt-5">
       <div class="d-flex justify-content-around mb-3">
         <input type="text" class="text-center bg-light" value="<%= fecha %>" disabled>
-        <input type="text" placeholder="numero datira" disabled>
+        <input type="text" class="text-center bg-white border border-0" value="<%=lastFacNum%>" disabled>
       </div>
       <div class="card-body" style="height: 40vh; overflow: auto">
         <table class="table table-info">
@@ -126,6 +128,17 @@
        
       
       </div>
+      <div class="position-absolute top-0  end-0 mt-5 me-4"  >
+        <% if(typeof validaciones != 'undefined') { %>
+            <% validaciones.forEach( (validacion) => {  %> 
+            <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+                <strong><%= validacion.msg %></strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <% }) %>
+        <% } %>
+        
+    </div>
       </div>
     </div>
   </div>
@@ -303,6 +316,10 @@
      
     
   }
+
+
+
+
 
   if (cart != undefined) {
     ShowHtml();

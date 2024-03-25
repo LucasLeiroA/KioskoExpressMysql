@@ -1,0 +1,158 @@
+<%- include('../partials/header.ejs') %> 
+
+<body>
+    <div class="container w-100  text-center mt-5 pt-5">
+        
+        <h3 class="text-light">Busqueda Por:</h3>
+
+    <div class="btn-group mt-3 " role="group" aria-label="Basic radio toggle button group">
+        
+        <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" onchange="OnChexBoxChange()">
+        <label class="btn btn-outline-info" for="btnradio1">Fecha</label>
+      
+        <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" onchange="OnChexBoxChange()">
+        <label class="btn btn-outline-info" for="btnradio2">Cliente</label>
+      
+       
+      </div>
+
+      <div class="container mt-5 m-auto  w-50" style="display: none;" id="contendor-filtro-fecha">
+          
+      </div>
+      <div  id="contendor-filtro-cliente" style="display: none;">
+        <div style="display: none;" class="table-responsive col-lg-8 col-sm-12 col-12">
+            <table class="table table-dark">
+              <thead>
+                <tr>
+                  <th>ID#</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>DNI</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+      
+              <tbody class="table-group-divider">
+                  <% if(data){ %> <% for(var i=0 ; i < data.length ; i++){ %>   
+                <tr>
+                  <th><%=data[i].cliente_id%></th>
+                  <th><%=data[i].cliente_nombre%></th>
+                  <th><%=data[i].cliente_apellido%></th>
+                  <th><%=data[i].cliente_dni%></th>
+                  <th>
+                    <a
+                      class="btn btn-danger"
+                      href="/registrarCliente/delete/<%=data[i].cliente_id%>"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-trash3-fill"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"
+                        /></svg
+                    ></a>
+                    <a
+                      class="btn btn-warning"
+                      href="/registrarCliente/update/<%=data[i].cliente_id%>"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-pencil-square"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                        /></svg
+                    ></a>
+                  </th>
+                </tr>
+                <%}}%>
+              </tbody>
+            </table>
+          </div>
+
+      </div>
+
+    </div>
+
+</body>
+
+
+<script>
+ var dateDesde = ""
+ var dateHasta= ""
+
+ function onChangeInputDate(){
+ 
+
+         dateDesde = document.getElementById("reporte-date-desde").value;
+         dateHasta = document.getElementById("reporte-date-hasta").value;
+        if ( dateHasta != "") {
+              if (dateDesde > dateHasta) {
+            Swal.fire("El formato de busqueda por fecha es incrorecto");
+            document.getElementById("contendor-filtro-fecha").innerHTML =`
+            <label for="reporte-date-desde" class="form-label text-light">Desde:</label>
+           <input class="form-control " type="date" id="reporte-date-desde" onchange="onChangeInputDate()" value="${dateDesde}">
+           <label for="reporte-date-hasta" class="form-label text-light mt-2">Hasta:</label>
+            <input class="form-control " type="date" id="reporte-date-hasta" onchange="onChangeInputDate()" value="${dateHasta}">
+            `
+         } else{
+            document.getElementById("contendor-filtro-fecha").innerHTML =`
+            <label for="reporte-date-desde" class="form-label text-light">Desde:</label>
+           <input class="form-control " type="date" id="reporte-date-desde" onchange="onChangeInputDate()" value="${dateDesde}">
+           <label for="reporte-date-hasta" class="form-label text-light mt-2">Hasta:</label>
+            <input class="form-control " type="date" id="reporte-date-hasta" onchange="onChangeInputDate()" value="${dateHasta}">
+            <a href="/reportesMultiples/pagoCuentaCorriente/${dateDesde}/${dateHasta}" class="btn btn-info mt-3">Filtar</a>
+            `
+         }
+        }
+      
+          
+    }
+
+
+
+    function OnChexBoxChange(){
+
+    //setimaos el contenedor vacio para cada vez que cambie el valor de vacie
+    document.getElementById("contendor-filtro-fecha").innerHTML="";   
+
+    if(document.getElementById('btnradio1').checked){
+        document.getElementById("contendor-filtro-fecha").style.display="block";
+        document.getElementById("contendor-filtro-fecha").innerHTML = `
+        <label for="reporte-date-desde" class="form-label text-light">Desde:</label>
+        <input class="form-control " type="date" id="reporte-date-desde" onchange="onChangeInputDate()">
+        <label for="reporte-date-hasta" class="form-label text-light mt-2">Hasta:</label>
+        <input class="form-control " type="date" id="reporte-date-hasta" onchange="onChangeInputDate()">
+            
+        `
+    }
+    if(document.getElementById('btnradio2').checked){
+        document.getElementById("contendor-filtro-cliente").style.display="block";
+    }
+
+
+
+
+    }
+
+
+    
+   
+
+
+    
+
+</script>

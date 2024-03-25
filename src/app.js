@@ -7,6 +7,7 @@ import reportes from './routes/reportes.routes.js'
 import incialRoute from './routes/inicial.routes.js'
 import anulacionVenta from './routes/anulacionVenta.routes.js'
 import registrarCliente from './routes/registrarCliente.routes.js'
+import cobranzaCC from "./routes/cobranzaCC.routes.js"
 import cors from 'cors';
 
 
@@ -52,4 +53,7 @@ app.use(reportes)
 app.use(incialRoute)
 app.use(anulacionVenta)
 app.use(registrarCliente)
+app.use(cobranzaCC)
+
+
 export default app;

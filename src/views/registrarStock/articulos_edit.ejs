@@ -4,6 +4,7 @@
     <div class="col-lg-3 col-sm-6 col-8 m-auto align-self-center">
 
         <form action="/registrarStock/update/<%= data[0].articulo_id %>" method="post">
+            <h1 class="text-light text-center mb-4">Modificar Producto</h1>
             <input class="form-control mb-2" type="text" name="articulo" value="<%=data[0].articulo_nombre%>"/>
             <input class="form-control mb-2" type="text" name="cantidad" value="<%=data[0].articulo_cantidad%>"/>
             <select class="form-control mb-2" name="categoria" value="<%=data[0].categoria_tipo%>" disabled>

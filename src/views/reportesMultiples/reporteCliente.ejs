@@ -1,0 +1,39 @@
+<%- include('../partials/header.ejs') %>
+
+
+
+<div class="container pt-5 text-center mt-5">
+    <h1 class="text-light">Deudas  </h1>
+<div class="table-responsive col-lg-8 col-sm-12 col-12 m-auto mt-5 pt-5">
+    <table class="table table-dark">
+      <thead>
+        <tr>
+          <th>ID#</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>DNI</th>
+          <th>Deuda</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody class="table-group-divider">
+          <% if(data){ %> <% for(var i=0 ; i < data.length ; i++){ %>   
+        <tr>
+          <th><%=data[i].cliente_id%></th>
+          <th><%=data[i].cliente_nombre%></th>
+          <th><%=data[i].cliente_apellido%></th>
+          <th><%=data[i].cliente_dni%></th>
+          <th><%=data[i].cliente_dueda%></th>
+          <th>
+            <a href="/reportesMultiples/VentasClientesDeuda/<%=data[i].cliente_id%>"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bank text-success" viewBox="0 0 16 16">
+                <path d="m8 0 6.61 3h.89a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v7a.5.5 0 0 1 .485.38l.5 2a.498.498 0 0 1-.485.62H.5a.498.498 0 0 1-.485-.62l.5-2A.5.5 0 0 1 1 13V6H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 3h.89zM3.777 3h8.447L8 1zM2 6v7h1V6zm2 0v7h2.5V6zm3.5 0v7h1V6zm2 0v7H12V6zM13 6v7h1V6zm2-1V4H1v1zm-.39 9H1.39l-.25 1h13.72z"/>
+              </svg></a>
+          </th>
+        <%}}%>
+      </tbody>
+    </table>
+    <div>
+        <a href="/reportesMultiples" class="btn btn-danger mb-3">Volver</a>
+</div>
+</div>

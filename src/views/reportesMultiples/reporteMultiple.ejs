@@ -10,14 +10,9 @@
     <option disabled selected>Seleccione el Reporte</option>
     <option value="EstadoCaja">Estado de Caja</option>
     <option value="ventasPorFecha">Ventas Por Fecha</option>
-    <option value="ventasPorFechaContado">Ventas Por Fecha Contado</option>
-    <option value="VentasPorFechaTransferencia">Ventas Por Fecha Transferencia</option>
-    <option value="VentasPorFechaCuentaCorriente">Ventas Por Fecha Cuenta Corriente</option>
-    <option value="ventasPorMes">Ventas Por Mes</option>
-    <option value="ventasPorMesContado">Ventas Por Mes Contado</option>
-    <option value="ventasPorMesContadoTransfencia">Ventas Por Mes Transferencia</option>
-    <option value="ventasPormesCuentaCorriente">Ventas Por Mes Cuenta Corriente</option>
-    <option value="ventasAnuladas">Ventas Anuladas Por mes</option>
+    <option value="ventasAnuladas">Ventas Anuladas Por Fecha</option>
+    <option value="deudaClientes">Deuda de Clientes</option>
+    <option value="pagoCuentaCorriente">Pagos Cuenta Corriente</option>
   </select>
 
   <div id="container-date">
@@ -28,39 +23,94 @@
 
 <script>
 
-  function inputDateOnchage() {
-    const fecha = document.getElementById("reporte-date").value;
-    var reporte = document.getElementById("select-reporte").value;
+  var tipoVenta=""; 
+  var reporte;
+  var fechaDesde;
+  var fechaHasta;
 
-    if (reporte === "ventasPorFecha" || reporte === "ventasPorMes" || reporte === "ventasPorFechaContado" || reporte === "VentasPorFechaTransferencia" || reporte === "ventasPorMesContado" || reporte === "ventasPorMesContadoTransfencia" || reporte ==="VentasPorFechaCuentaCorriente" || reporte === "ventasPormesCuentaCorriente" || reporte === "ventasAnuladas") {
-       return   document.getElementById("btn-filter").innerHTML = `
-             <a href="/reportesMultiples/${reporte}/${fecha}" class="btn btn-info mt-2 text-light">Filtrar</a>
-             `;
+
+
+
+  function inputDateOnchage() {
+     reporte = document.getElementById("select-reporte").value;
+    fechaDesde = document.getElementById("reporte-date-desde").value;
+    fechaHasta = document.getElementById("reporte-date-hasta").value;
+
+    let contact  = document.getElementsByName("inlineRadioOptions");
+      for (var i = 0; i < contact.length; i++) {
+
+        var isSelected = contact[i].matches(":checked");
+
+        if (isSelected) {
+          tipoVenta = contact[i].value; 
+      }
+
+
+    }
+
+
+    if (tipoVenta == "") {
+      console.log("Sin valor");
+    }
+    else{
+
+      if (fechaHasta != "") {
+
+        if (fechaDesde > fechaHasta) {
+          Swal.fire("El formato de busqueda por fecha es incrorecto");
+          document.getElementById("btn-filter").innerHTML = "";
+        }
+        else{
+         
+            
+                    
+          document.getElementById("btn-filter").innerHTML = `
+        
+            <a href="/reportesMultiples/${reporte}/${fechaDesde}/${fechaHasta}/${tipoVenta}" class="btn btn-info mt-2 text-light">Filtrar</a>
+            `;    
+        }
+    }
     }
  
-     
-  }
+  
+    }
+
+
+  
+
 
   function ReporteOnchange() {
     var reporte = document.getElementById("select-reporte").value;
 
-    if(reporte === "ventasPorMes" || reporte ===  "ventasPorMesContado" ||reporte ===  "ventasPorMesContadoTransfencia" || reporte === "ventasPormesCuentaCorriente" || reporte === "ventasAnuladas"){
-
-        return document.getElementById("container-date").innerHTML = `
-            
-            <input class="form-control mt-5" type="month" id="reporte-date" onchange="inputDateOnchage()">
-           
-            `;
-    }
-    if (reporte === "ventasPorFecha" || reporte === "ventasPorFechaContado" || reporte === "VentasPorFechaTransferencia" || reporte=== "VentasPorFechaCuentaCorriente") {
+    if (reporte === "ventasPorFecha" || reporte === "ventasAnuladas") {
     
      return document.getElementById("container-date").innerHTML = `
+         <label for="reporte-date-desde" class="form-label text-light mt-3">Desde:</label>
+            <input class="form-control mt-2" type="date" id="reporte-date-desde" onchange="inputDateOnchage()">  
+            <label for="reporte-date-hasta" class="form-label text-light mt-3">Hasta:</label>
+            <input class="form-control mt-2" type="date" id="reporte-date-hasta" onchange="inputDateOnchage()">  
             
-            <input class="form-control mt-5" type="date" id="reporte-date" onchange="inputDateOnchage()">          
-            `;
+            <div class="form-check form-check-inline text-light mt-4">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioContado" value="1" onchange="inputDateOnchage()">
+              <label class="form-check-label" for="inlineRadio1">Contado</label>
+            </div>
+            <div class="form-check form-check-inline text-light">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioCC" value="2" onchange="inputDateOnchage()">
+              <label class="form-check-label" for="inlineRadio2">Cuenta Corriente</label>
+            </div>
+            <div class="form-check form-check-inline text-light">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioTransfencia" value="3" onchange="inputDateOnchage()">
+              <label class="form-check-label" for="inlineRadio3">Transferencia</label>
+            </div>    
+            <div class="form-check form-check-inline text-light">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioTodas" value="0" onchange="inputDateOnchage()">
+              <label class="form-check-label" for="inlineRadio3">Todas</label>
+            </div>    
+            `;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 
 
-    }else {
+    }
+    else {
       window.location.replace(`/reportesMultiples/${reporte}`);
     }
     

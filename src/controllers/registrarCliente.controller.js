@@ -33,7 +33,7 @@ export const addClient = async (req,res) => {
         
         
 
-         await pool.query(`insert into cliente (cliente_nombre,cliente_apellido,cliente_dni) values ("${nombre}","${apellido}",${dni})`);
+         await pool.query(`insert into cliente (cliente_nombre,cliente_apellido,cliente_dni,cliente_dueda) values ("${nombre}","${apellido}",${dni},0)`);
       
     } catch (error) {
         res.status(500);

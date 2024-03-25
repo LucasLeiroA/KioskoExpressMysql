@@ -52,12 +52,7 @@
             <%}%>
     </div>
     <div class="text-center w-100 mb-3">
-        <% if(fechaDesde!="none" && fechaHasta!="none"){ %>
-            <a class="btn btn-danger col-lg-8 col-sm-10 col-8" href="/reportesMultiples/<%=url%>/<%=fechaDesde%>/<%=fechaHasta%>/<%= tipoVenta%>">Volver</a>
-           <% }else{ %>
-            <a class="btn btn-danger col-lg-8 col-sm-10 col-8" href="/reportesMultiples/<%=url%>/<%= clientId%>">Volver</a>
-           <% }%>
-     
+        <a class="btn btn-danger col-lg-8 col-sm-10 col-8" href="/cobranzaCuentaCorriente/<%=url%>/<%=fecha%>">Volver</a>
     </div>
     </div>
    

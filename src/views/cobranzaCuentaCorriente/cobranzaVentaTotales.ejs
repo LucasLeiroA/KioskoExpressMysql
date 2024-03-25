@@ -1,0 +1,147 @@
+<%- include('../partials/header.ejs') %>
+
+
+<div class="container pt-5 text-center mt-5">
+    <h1 class="text-light"><%=titulo%> <span id="cliente_id" data-id="<%= fecha%>" ><%= fecha%></span> </h1>  
+ 
+
+    <div class="table-responsive col-lg-10 col-sm-12 col-12 m-auto ">
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th>N Venta</th>
+                    <th>Venta Fecha</th>
+                    <th>Estado de Venta</th>
+                    <th>Tipo de Venta</th>
+                    <th>Total Venta</th>
+                    <th>Detalle</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <% if(ventas){
+                    for(var i=0 ; i < ventas.length ; i++){ %>
+                        <tr>                      
+                            <th><%= ventas[i].venta_nro %></th>
+                            <th><%= ventas[i].fechaTotal %></th>
+                            <th><%= ventas[i].estadoVenta_id %></th>
+                            <th><%= ventas[i].tipoVenta_id %></th>
+                            <th><%= ventas[i].venta_montoTotal %></th>
+                            <th><a href="/cobranzaCuentaCorriente/cobranzaDetalle/<%= url %>/<%= fecha %>/<%= ventas[i].venta_id %>"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-ticket-detailed-fill text-light" viewBox="0 0 16 16">
+                                <path d="M0 4.5A1.5 1.5 0 0 1 1.5 3h13A1.5 1.5 0 0 1 16 4.5V6a.5.5 0 0 1-.5.5 1.5 1.5 0 0 0 0 3 .5.5 0 0 1 .5.5v1.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 11.5V10a.5.5 0 0 1 .5-.5 1.5 1.5 0 1 0 0-3A.5.5 0 0 1 0 6zm4 1a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5m0 5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5M4 8a1 1 0 0 0 1 1h6a1 1 0 1 0 0-2H5a1 1 0 0 0-1 1"/>
+                              </svg></a></th>
+                        </tr>
+                    <% }
+                } %>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>DEUDA</th>
+                    <th id="cliente-deuda" data-id="<%=deudaTotal%>"><%=deudaTotal%></th>
+                    <th><input type="number" class="input-group-text" placeholder="Ingrese el pago"  id="input-pago" onchange="inputValue()"></th>
+                    <th><a class="btn btn-success" href="" id="btn-pagar" onclick="btnPagar()">Pagar</a></th>
+                    <th>TOTAL </th>
+                    <th>$<%= totalVentas %></th>
+                </tr>
+            </tfoot>
+          </table>   
+    </div>
+
+    
+    <div>
+            <a href="/cobranzaCuentaCorriente" class="btn btn-danger mb-3">Volver</a>
+    </div>
+</div>
+
+<script>
+    
+    var pay = 0;
+
+    var elementoCliente = document.getElementById('cliente_id');
+     var dataID = elementoCliente.getAttribute('data-id');
+     const clienteId = parseInt(dataID);
+    var elementoDeuda = document.getElementById('cliente-deuda');
+    var dataDeuda = elementoDeuda.getAttribute('data-id');
+    const deuda = parseInt(dataDeuda);
+
+
+    function inputValue (){
+        pay = parseInt(document.getElementById("input-pago").value)
+        if (pay === "") {
+            pay=0;
+        }
+        console.log(pay);
+      
+    }
+
+
+    async function  btnPagar(){
+       
+        event.preventDefault()
+        console.log(pay);
+        console.log(deuda);
+
+        if (pay <= deuda && pay != 0 ) {
+         
+          
+        const inputOptions = new Promise((resolve) => {
+            setTimeout(() => {
+                resolve({
+                "1": "contado",
+                "2": "Trasferencia",
+                });
+            }, 1000);
+            });
+            const { value: color} = await Swal.fire({
+            showCloseButton: true,
+            title: "Seleccione el Tipo de Pago",
+            input: "radio",
+            inputOptions,
+            inputValidator: (value) => {
+                if (!value) {
+                    return "Necesita sellecionar un metodo ";
+                }
+            
+            }
+
+            
+          
+            });
+
+         
+
+
+            if (color == "1") {
+              
+            Swal.fire({ html: `Seleccionaste: Contado` })
+
+            setTimeout(() => {
+                return   window.location.replace(`/cobranzaCuentaCorriente/pagoCuentaCorriente/${clienteId}/${pay}/1`)
+            }, 1500);
+           
+            
+            }if((color == "2") ){
+                Swal.fire({ html: `Seleccionaste: Trasnferencia` })
+
+                setTimeout(() => {
+                return   window.location.replace(`/cobranzaCuentaCorriente/pagoCuentaCorriente/${clienteId}/${pay}/3`)
+            }, 1500);
+
+
+            }  
+        }else{
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Debe ingresar un pago valido",
+         })
+        }
+
+
+}
+    
+        
+ 
+
+
+
+</script>
