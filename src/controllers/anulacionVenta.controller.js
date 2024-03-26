@@ -162,6 +162,6 @@ export const getSingleVenta = async (req , res) => {
 
   
    
-   res.redirect(`/anulacionVentas`)
+   res.redirect(`/anulacionVentas/fecha/${fecha}`)
  }
  

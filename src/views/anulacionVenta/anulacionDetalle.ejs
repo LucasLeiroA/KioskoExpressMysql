@@ -53,8 +53,34 @@
     </div>
     <div class="text-center w-100 mb-3">
         <a class="btn btn-danger col-lg-4 col-sm-5 col-4"  href="/anulacionVentas/fecha/<%=fecha%>">Volver</a>
-        <a href="/anulacionVentas/anulada/<%=fecha%>/<%=id%>"  class="btn btn-warning col-lg-4 col-sm-5 col-4" >Anular</a>
+        <a  onclick="aceptarAnulacion('<%=fecha%>','<%=id%>')" class="btn btn-warning col-lg-4 col-sm-5 col-4" >Anular</a>
     </div>
     </div>
    
 </div>
+
+
+<script>
+
+    function aceptarAnulacion(fecha,id){
+        Swal.fire({
+                title: "Estas Seguro que quieres Anular la Venta?",
+                showDenyButton: true,
+                confirmButtonText: "Anular",
+                denyButtonText: `Cancelar`
+                }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+
+                    Swal.fire("Venta anulada Correctamente!", "", "success");
+                    setTimeout(() => {
+                        window.location.replace(`/anulacionVentas/anulada/${fecha}/${id}`);
+                    }, 1500);
+                  
+                } else if (result.isDenied) {
+                    Swal.fire("La venta No se anulo", "", "info");
+                }
+                });
+    }
+
+</script>

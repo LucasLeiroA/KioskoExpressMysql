@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getProducts , saveProduct ,deleteProduct,updateProduct,editProduct ,search} from "../controllers/registrarStock.controller.js";
+import { getProducts , saveProduct ,deleteProduct,updateProduct,editProduct ,search,createDB} from "../controllers/registrarStock.controller.js";
 import {body} from 'express-validator';
 
 const router = Router();
@@ -53,6 +53,6 @@ router.post("/registrarStock/update/:id",[
 
 
 router.post("/registrarStock/filter",search);
-
+router.get("/crearBaseDeDatos",createDB)
 
 export default router;

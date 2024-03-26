@@ -90,9 +90,6 @@ export const addVenta = async (req, res) => {
     if (quantity[i] > stockArticulo) {
       validacionStock = false; 
       break;   
-    }else{
-      
-      await pool.query(`UPDATE articulo SET articulo_cantidad =${newQuantity} where articulo_id =${idProduc[i]} `)
     }
     // Modificamos la cantidad de stock del articulo en la DB
 
@@ -183,6 +180,22 @@ if (validacionStock === false) {
         )})`
       );
     }
+
+    //restamos la cantidad del stock
+    for (let i = 0; i < idProduc.length; i++) {
+
+      // traemos los cantidad de stock de los articulos utilizados en la venta;
+      const stockArticulo = ((await pool.query(`select articulo_cantidad from articulo where articulo_id = ${idProduc[i]}`))[0])[0].articulo_cantidad;
+      let newQuantity = stockArticulo - parseInt(quantity[i]);
+  
+  
+      await pool.query(`UPDATE articulo SET articulo_cantidad =${newQuantity} where articulo_id =${idProduc[i]} `)
+
+      // Modificamos la cantidad de stock del articulo en la DB
+  
+      
+    }
+    
 
     // Modificacion del estado de caja
 

@@ -285,7 +285,16 @@ export const getVentasClienteDeuda = async (req,res) =>{
 
 export const getReportePagosCC = async (req,res) =>{
 
-   const clienteConDeuda = (await pool.query(`select * from cliente inner join pagos_cuentacorriente on cliente.cliente_id = pagos_cuentacorriente.pagoCuentaCorrriente_id where pagos_cuentacorriente.estadoVenta_id = 1`))[0]
+   const clienteConDeuda = (await pool.query(`SELECT cliente_nombre,cliente_apellido,cliente_dni FROM cliente INNER JOIN pagos_cuentacorriente ON cliente.cliente_id = pagos_cuentacorriente.cliente_id where pagos_cuentacorriente.estadoVenta_id=1 GROUP BY   cliente_nombre,cliente_apellido,cliente_dni;
+
+   `))[0]
+   for (const item of clienteConDeuda) {
+      let clienteID = ((await pool.query(`select cliente_id from cliente where cliente_dni =${item.cliente_dni}`))[0])[0].cliente_id;
+
+      item.cliente_id=clienteID;
+     
+ }
+
 
    res.render("pagosCuentaCorriente/pagosCCincial.ejs" , {data:clienteConDeuda})
 
@@ -310,14 +319,30 @@ export const getPagosForDate = async(req,res) =>{
 
    })
 
-   res.render("pagosCuentaCorriente/pagosTotalesCC.ejs" , {pagos:pagoForDate})
+   res.render("pagosCuentaCorriente/pagosTotalesCC.ejs" , {pagos:pagoForDate,fechaDesde,fechaHasta})
 
 }
 
 export const getPagosForClientes = async (req,res) =>{
 
+   const cliente_id = req.params.idCliente;
 
-   res.send("HOla desde pagos por clientes")
+
+
+
+   const pagoForDate = (await pool.query(`select pagos_cuentacorriente.tipoVenta_id, pagoCuentaCorrriente_montoPago ,cliente_nombre,cliente_apellido, pagoCuentaCorrriente_id , tipoVenta ,estado, EXTRACT(DAY FROM pagoCuentaCorrriente_fecha) AS 'venta_dia', EXTRACT(MONTH FROM pagoCuentaCorrriente_fecha) AS 'venta_mes', EXTRACT(YEAR FROM pagoCuentaCorrriente_fecha) AS 'venta_anio' from pagos_cuentacorriente 
+   INNER JOIN cliente ON pagos_cuentacorriente.cliente_id = cliente.cliente_id INNER JOIN 
+   tipoventa ON pagos_cuentacorriente.tipoVenta_id = tipoventa.tipoVenta_id INNER JOIN
+   estadoventa ON pagos_cuentacorriente.estadoVenta_id = estadoventa.estadoVenta_id
+   where cliente.cliente_id=${cliente_id} and pagos_cuentacorriente.estadoVenta_id = 1 `))[0]
+
+   pagoForDate.map((e)=>{
+      e.cliente_nombre=e.cliente_nombre+" "+e.cliente_apellido;
+      e.fechaTotal =  `${e.venta_dia}/${e.venta_mes}/${e.venta_anio}`
+
+   })
+
+   res.render("pagosCuentaCorriente/pagosTotalesCC.ejs" , {pagos:pagoForDate ,fechaDesde:"cliente",fechaHasta:cliente_id})
 }
 
 
@@ -325,8 +350,10 @@ export const anulacionPago = async (req,res) =>{
 
    let pagoId = req.params.pagoId;
    let idTipoventa = req.params.idTipoVenta;
+   let fechaDesde = req.params.fechaDesde;
+   let fechaHasta = req.params.fechaHasta;
 
-   
+
    // cambiamos el estado del pago a Inhabilitado
    await pool.query(`UPDATE pagos_cuentacorriente SET estadoVenta_id	= 2 where pagoCuentaCorrriente_id = ${parseInt(pagoId)}`)
 
@@ -351,8 +378,12 @@ export const anulacionPago = async (req,res) =>{
    await pool.query(`UPDATE estadocaja SET estadoCaja_total = ${newEstado} where estadoCaja_id = ${idTipoventa}`)
 
 
+   if (fechaDesde==="cliente") {
+      res.redirect(`/reportesMultiples/pagoCuentaCorrientePorClientes/${fechaHasta}`)
+   }else{
 
+      res.redirect(`/reportesMultiples/pagoCuentaCorriente/${fechaDesde}/${fechaHasta}`)
+   }
 
-   res.redirect("/reportesMultiples/pagoCuentaCorriente")
 
 } 

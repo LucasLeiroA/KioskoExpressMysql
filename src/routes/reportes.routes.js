@@ -35,10 +35,12 @@ router.get("/reportesMultiples/VentasClientesDeuda/:id",getVentasClienteDeuda)
 // reporte Pagos Cuenta Corriente;
 
 router.get("/reportesMultiples/pagoCuentaCorriente",getReportePagosCC)
+
 router.get("/reportesMultiples/pagoCuentaCorriente/:fechaDesde/:fechaHasta",getPagosForDate);
+
 router.get("/reportesMultiples/pagoCuentaCorrientePorClientes/:idCliente",getPagosForClientes);
 
 
-router.get("/reportesMultiples/anulacionPago/:pagoId/:idTipoVenta",anulacionPago)
+router.get("/reportesMultiples/anulacionPago/:pagoId/:idTipoVenta/:fechaDesde/:fechaHasta",anulacionPago)
 
 export default router;
